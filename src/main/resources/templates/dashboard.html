@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle Service Management - Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #0056b3;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+        }
+        .logout-btn {
+            color: white;
+            text-decoration: none;
+            background-color: #d9534f;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .logout-btn:hover {
+            background-color: #c9302c;
+        }
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .welcome-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-info {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Vehicle Service Management System</h1>
+        <a th:href="@{/logout}" class="logout-btn">Log Out</a>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h2>Dashboard</h2>
+            <p>Welcome back, <strong th:text="${user.username}">User</strong>!</p>
+            
+            <div class="user-info">
+                <p><strong>Account Type:</strong> <span th:text="${user.role}">ROLE</span></p>
+                <p><strong>Status:</strong> Authenticated and Active</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
