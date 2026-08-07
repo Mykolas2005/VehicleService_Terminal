@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Vehicle List</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .btn { display: inline-block; padding: 8px 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; }
+        .btn-secondary { background-color: #6c757d; }
+        .actions { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Vehicle Management</h2>
+    
+    <div class="actions">
+        <a th:href="@{/vehicles/register}" class="btn">Register New Vehicle</a>
+        <a th:href="@{/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Registration</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Mileage</th>
+                <th>Owner</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="vehicle : ${vehicles}">
+                <td th:text="${vehicle.registrationNumber}">AB12 CDE</td>
+                <td th:text="${vehicle.make}">Ford</td>
+                <td th:text="${vehicle.model}">Focus</td>
+                <td th:text="${vehicle.yearOfManufacture}">2020</td>
+                <td th:text="${vehicle.mileage}">45000</td>
+                <td th:text="${vehicle.owner.username}">customer</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(vehicles)}">
+                <td colspan="6" style="text-align: center;">No vehicles found.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
