@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -78,7 +79,8 @@ public class ServiceTicketController {
     @PostMapping("/{id}/status")
     public String updateTicketStatus(HttpSession session,
                                      @PathVariable Long id,
-                                     @RequestParam TicketStatus status) {
+                                     @RequestParam TicketStatus status,
+                                     @RequestParam(required = false) String repairNotes) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/";
@@ -93,6 +95,12 @@ public class ServiceTicketController {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ticket ID"));
 
         ticket.setStatus(status);
+        ticket.setUpdatedAt(LocalDateTime.now());
+        
+        if (repairNotes != null && !repairNotes.trim().isEmpty()) {
+            ticket.setRepairNotes(repairNotes);
+        }
+        
         ticketRepository.save(ticket);
 
         return "redirect:/tickets";
