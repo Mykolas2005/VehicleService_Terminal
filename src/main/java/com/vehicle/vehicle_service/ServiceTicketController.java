@@ -74,4 +74,27 @@ public class ServiceTicketController {
 
         return "redirect:/tickets";
     }
+
+    @PostMapping("/{id}/status")
+    public String updateTicketStatus(HttpSession session,
+                                     @PathVariable Long id,
+                                     @RequestParam TicketStatus status) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        // Restrict customers from updating ticket status
+        if (user.getRole() == Role.CUSTOMER) {
+            return "redirect:/tickets";
+        }
+
+        ServiceTicket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid ticket ID"));
+
+        ticket.setStatus(status);
+        ticketRepository.save(ticket);
+
+        return "redirect:/tickets";
+    }
 }

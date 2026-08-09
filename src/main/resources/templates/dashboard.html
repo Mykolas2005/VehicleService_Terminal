@@ -22,6 +22,23 @@
             margin: 0;
             font-size: 1.4rem;
         }
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .btn {
+            color: white;
+            text-decoration: none;
+            background-color: #007bff;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
         .logout-btn {
             color: white;
             text-decoration: none;
@@ -50,14 +67,20 @@
             border-radius: 4px;
             margin-top: 1rem;
         }
+        .quick-actions {
+            margin-top: 1.5rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Vehicle Service Management System</h1>
-        <a th:href="@{/vehicles}" class="btn">Manage Vehicles</a>
-        <a th:href="@{/logout}" class="logout-btn">Log Out</a>
+        <div class="nav-actions">
+            <a th:href="@{/vehicles}" class="btn">Manage Vehicles</a>
+            <a th:href="@{/tickets}" class="btn">Manage Service Tickets</a>
+            <a th:href="@{/logout}" class="logout-btn">Log Out</a>
+        </div>
     </div>
 
     <div class="container">
@@ -68,6 +91,11 @@
             <div class="user-info">
                 <p><strong>Account Type:</strong> <span th:text="${user.role}">ROLE</span></p>
                 <p><strong>Status:</strong> Authenticated and Active</p>
+            </div>
+
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <a th:href="@{/tickets/new}" class="btn">Create New Service Ticket</a>
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@ public class LoginController {
     }
 
     @GetMapping("/")
-    public String showLoginForm() {
+    public String showLoginPage() {
         return "login";
     }
 
@@ -29,9 +29,12 @@ public class LoginController {
                               HttpSession session,
                               Model model) {
 
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        String cleanUsername = username != null ? username.trim() : "";
+        String cleanPassword = password != null ? password.trim() : "";
 
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
+        Optional<User> userOpt = userRepository.findByUsername(cleanUsername);
+
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(cleanPassword)) {
             User user = userOpt.get();
             session.setAttribute("loggedInUser", user);
             return "redirect:/dashboard";

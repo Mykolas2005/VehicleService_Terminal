@@ -1,6 +1,6 @@
 package com.vehicle.vehicle_service;
 
-import org.springframework.security.core.Authentication;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +20,11 @@ public class VehicleController {
     }
 
     @GetMapping
-    public String listVehicles(Model model, Authentication authentication) {
-        String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public String listVehicles(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("loggedInUser");
+        if (currentUser == null) {
+            return "redirect:/";
+        }
 
         List<Vehicle> vehicles;
         if (currentUser.getRole() == Role.CUSTOMER) {
@@ -38,16 +39,22 @@ public class VehicleController {
     }
 
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("loggedInUser");
+        if (currentUser == null) {
+            return "redirect:/";
+        }
+
         model.addAttribute("vehicle", new Vehicle());
         return "vehicles/register";
     }
 
     @PostMapping("/register")
-    public String registerVehicle(@ModelAttribute Vehicle vehicle, Authentication authentication) {
-        String username = authentication.getName();
-        User currentUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public String registerVehicle(@ModelAttribute Vehicle vehicle, HttpSession session) {
+        User currentUser = (User) session.getAttribute("loggedInUser");
+        if (currentUser == null) {
+            return "redirect:/";
+        }
 
         vehicle.setOwner(currentUser);
         vehicleRepository.save(vehicle);
