@@ -9,6 +9,10 @@ public interface ServiceTicketRepository extends JpaRepository<ServiceTicket, Lo
 
     List<ServiceTicket> findByVehicleOwner(User owner);
 
+    long countByStatus(TicketStatus status);
+
+    List<ServiceTicket> findByStatus(TicketStatus status);
+
     @Query("SELECT t FROM ServiceTicket t WHERE " +
            "(:status IS NULL OR t.status = :status) AND " +
            "(:search IS NULL OR :search = '' OR CAST(t.id AS string) = :search OR LOWER(t.vehicle.registrationNumber) LIKE LOWER(CONCAT('%', :search, '%')))")
