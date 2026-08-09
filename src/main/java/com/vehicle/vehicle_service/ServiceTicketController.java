@@ -22,7 +22,10 @@ public class ServiceTicketController {
     }
 
     @GetMapping
-    public String listTickets(HttpSession session, Model model) {
+    public String listTickets(
+            @RequestParam(required = false) TicketStatus status,
+            @RequestParam(required = false) String search,
+            HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/";
@@ -30,12 +33,14 @@ public class ServiceTicketController {
 
         List<ServiceTicket> tickets;
         if (user.getRole() == Role.CUSTOMER) {
-            tickets = ticketRepository.findByVehicleOwner(user);
+            tickets = ticketRepository.findByVehicleOwnerAndStatusAndSearch(user, status, search);
         } else {
-            tickets = ticketRepository.findAll();
+            tickets = ticketRepository.findByStatusAndSearch(status, search);
         }
 
         model.addAttribute("tickets", tickets);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("searchKeyword", search);
         return "tickets/list";
     }
 
