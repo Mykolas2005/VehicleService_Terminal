@@ -20,27 +20,36 @@ public class DashboardController {
     }
 
     @GetMapping("/")
-    public String dashboard(HttpSession session, Model model) {
+    public String home(HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) {
             return "redirect:/login";
         }
-
-        // Aggregate statistics and metrics for staff/admin dashboard
-        if (user.getRole() != Role.CUSTOMER) {
-            long totalVehicles = vehicleRepository.count();
-            long openTicketsCount = ticketRepository.countByStatus(TicketStatus.OPEN);
-            long inProgressCount = ticketRepository.countByStatus(TicketStatus.IN_PROGRESS);
-            long completedServicesCount = ticketRepository.countByStatus(TicketStatus.COMPLETED);
-            long activeTicketsCount = openTicketsCount + inProgressCount;
-
-            List<ServiceTicket> recentOpenTickets = ticketRepository.findByStatus(TicketStatus.OPEN);
-
-            model.addAttribute("totalVehicles", totalVehicles);
-            model.addAttribute("activeTickets", activeTicketsCount);
-            model.addAttribute("completedServices", completedServicesCount);
-            model.addAttribute("recentOpenTickets", recentOpenTickets);
+        if (user.getRole() == Role.CUSTOMER) {
+            return "redirect:/tickets";
         }
+        return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null || user.getRole() == Role.CUSTOMER) {
+            return "redirect:/login";
+        }
+
+        long totalVehicles = vehicleRepository.count();
+        long openTicketsCount = ticketRepository.countByStatus(TicketStatus.OPEN);
+        long inProgressCount = ticketRepository.countByStatus(TicketStatus.IN_PROGRESS);
+        long completedServicesCount = ticketRepository.countByStatus(TicketStatus.COMPLETED);
+        long activeTicketsCount = openTicketsCount + inProgressCount;
+
+        List<ServiceTicket> recentOpenTickets = ticketRepository.findByStatus(TicketStatus.OPEN);
+
+        model.addAttribute("totalVehicles", totalVehicles);
+        model.addAttribute("activeTickets", activeTicketsCount);
+        model.addAttribute("completedServices", completedServicesCount);
+        model.addAttribute("recentOpenTickets", recentOpenTickets);
 
         return "dashboard";
     }
