@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Optional;
-
 @Controller
 public class LoginController {
 
@@ -18,28 +16,21 @@ public class LoginController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("/login")
     public String showLoginPage() {
         return "login";
     }
 
     @PostMapping("/login")
-    public String handleLogin(@RequestParam String username,
-                              @RequestParam String password,
-                              HttpSession session,
-                              Model model) {
-
-        String cleanUsername = username != null ? username.trim() : "";
-        String cleanPassword = password != null ? password.trim() : "";
-
-        Optional<User> userOpt = userRepository.findByUsername(cleanUsername);
-
-        if (userOpt.isPresent() && userOpt.get().getPassword().equals(cleanPassword)) {
-            User user = userOpt.get();
+    public String login(@RequestParam String username,
+                        @RequestParam String password,
+                        HttpSession session,
+                        Model model) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user != null && user.getPassword().equals(password)) {
             session.setAttribute("loggedInUser", user);
-            return "redirect:/dashboard";
+            return "redirect:/";
         }
-
         model.addAttribute("error", "Invalid username or password");
         return "login";
     }
@@ -47,6 +38,6 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/";
+        return "redirect:/login";
     }
 }

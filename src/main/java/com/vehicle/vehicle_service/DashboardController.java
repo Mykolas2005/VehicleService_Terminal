@@ -25,17 +25,20 @@ public class DashboardController {
         if (user == null) {
             return "redirect:/login";
         }
-        if (user.getRole() == Role.CUSTOMER) {
-            return "redirect:/tickets";
+        // Redirect admins to dashboard, everyone else to tickets
+        if (user.getRole() == Role.ADMIN) {
+            return "redirect:/admin/dashboard";
         }
-        return "redirect:/admin/dashboard";
+        return "redirect:/tickets";
     }
 
     @GetMapping("/admin/dashboard")
     public String adminDashboard(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
-        if (user == null || user.getRole() == Role.CUSTOMER) {
-            return "redirect:/login";
+        
+        // Strict Admin Check
+        if (user == null || user.getRole() != Role.ADMIN) {
+            return "redirect:/tickets";
         }
 
         long totalVehicles = vehicleRepository.count();
