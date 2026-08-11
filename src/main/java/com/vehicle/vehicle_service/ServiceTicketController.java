@@ -14,11 +14,14 @@ public class ServiceTicketController {
 
     private final ServiceTicketRepository ticketRepository;
     private final VehicleRepository vehicleRepository;
+    private final UserRepository userRepository;
 
     public ServiceTicketController(ServiceTicketRepository ticketRepository,
-                                   VehicleRepository vehicleRepository) {
+                                   VehicleRepository vehicleRepository,
+                                   UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.vehicleRepository = vehicleRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
@@ -33,7 +36,9 @@ public class ServiceTicketController {
 
         List<ServiceTicket> tickets;
         if (user.getRole() == Role.CUSTOMER) {
-            tickets = ticketRepository.findByVehicleOwnerAndStatusAndSearch(user, status, search);
+            User managedUser = userRepository.findById(user.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            tickets = ticketRepository.findByVehicleOwnerAndStatusAndSearch(managedUser, status, search);
         } else {
             tickets = ticketRepository.findByStatusAndSearch(status, search);
         }
@@ -53,7 +58,7 @@ public class ServiceTicketController {
 
         List<Vehicle> userVehicles;
         if (user.getRole() == Role.CUSTOMER) {
-            userVehicles = vehicleRepository.findByOwner(user);
+            userVehicles = vehicleRepository.findByOwnerId(user.getId());
         } else {
             userVehicles = vehicleRepository.findAll();
         }
@@ -91,7 +96,6 @@ public class ServiceTicketController {
             return "redirect:/";
         }
 
-        // Restrict customers from updating ticket status
         if (user.getRole() == Role.CUSTOMER) {
             return "redirect:/tickets";
         }

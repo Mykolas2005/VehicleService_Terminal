@@ -25,11 +25,15 @@ public class DashboardController {
         if (user == null) {
             return "redirect:/login";
         }
-        // Redirect admins to dashboard, everyone else to tickets
         if (user.getRole() == Role.ADMIN) {
             return "redirect:/admin/dashboard";
         }
         return "redirect:/tickets";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session) {
+        return home(session);
     }
 
     @GetMapping("/admin/dashboard")

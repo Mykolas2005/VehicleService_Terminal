@@ -28,7 +28,7 @@ public class VehicleController {
 
         List<Vehicle> vehicles;
         if (currentUser.getRole() == Role.CUSTOMER) {
-            vehicles = vehicleRepository.findByOwner(currentUser);
+            vehicles = vehicleRepository.findByOwnerId(currentUser.getId());
         } else {
             vehicles = vehicleRepository.findAll();
         }
@@ -56,7 +56,10 @@ public class VehicleController {
             return "redirect:/";
         }
 
-        vehicle.setOwner(currentUser);
+        User managedUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        vehicle.setOwner(managedUser);
         vehicleRepository.save(vehicle);
 
         return "redirect:/vehicles";
