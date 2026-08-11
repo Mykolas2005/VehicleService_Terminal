@@ -30,8 +30,8 @@ public class DataInitialiser implements CommandLineRunner {
             userRepository.save(mechanic);
             User savedCustomer = userRepository.save(customer);
 
-            Vehicle vehicle1 = new Vehicle("AB12 CDE", "Ford", "Focus", 2019, 35000, savedCustomer);
-            Vehicle vehicle2 = new Vehicle("XY56 ZHT", "Volkswagen", "Golf", 2021, 18000, savedCustomer);
+            Vehicle vehicle1 = new Vehicle("07C1235", "Ford", "Focus", 2019, 35000, savedCustomer);
+            Vehicle vehicle2 = new Vehicle("12ww5412", "Volkswagen", "Golf", 2021, 18000, savedCustomer);
 
             vehicleRepository.save(vehicle1);
             vehicleRepository.save(vehicle2);
