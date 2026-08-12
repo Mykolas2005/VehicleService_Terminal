@@ -26,14 +26,12 @@ public class VehicleController {
             return "redirect:/";
         }
 
-        List<Vehicle> vehicles;
+        // Restrict customers from viewing the general vehicle management list page
         if (currentUser.getRole() == Role.CUSTOMER) {
-            vehicles = vehicleRepository.findByOwnerId(currentUser.getId());
-        } else {
-            vehicles = vehicleRepository.findAll();
+            return "redirect:/tickets";
         }
 
-        // Ensure vehicles is never null to prevent SpEL null property errors in Thymeleaf
+        List<Vehicle> vehicles = vehicleRepository.findAll();
         if (vehicles == null) {
             vehicles = List.of();
         }
@@ -50,6 +48,7 @@ public class VehicleController {
             return "redirect:/";
         }
 
+        // Customers are allowed to access this form to register their own vehicle
         model.addAttribute("vehicle", new Vehicle());
         return "vehicles/register";
     }
@@ -66,6 +65,11 @@ public class VehicleController {
 
         vehicle.setOwner(managedUser);
         vehicleRepository.save(vehicle);
+
+        // Redirect customers back to tickets since they don't have access to /vehicles list
+        if (currentUser.getRole() == Role.CUSTOMER) {
+            return "redirect:/tickets";
+        }
 
         return "redirect:/vehicles";
     }
