@@ -33,6 +33,11 @@ public class VehicleController {
             vehicles = vehicleRepository.findAll();
         }
 
+        // Ensure vehicles is never null to prevent SpEL null property errors in Thymeleaf
+        if (vehicles == null) {
+            vehicles = List.of();
+        }
+
         model.addAttribute("vehicles", vehicles);
         model.addAttribute("userRole", currentUser.getRole().name());
         return "vehicles/list";
