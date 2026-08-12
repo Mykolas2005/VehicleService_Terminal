@@ -22,7 +22,12 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Service Tickets</h2>
-            <a th:if="${session.loggedInUser?.role?.toString() == 'CUSTOMER'}" href="/tickets/new" class="btn btn-primary">Create New Ticket</a>
+            <div>
+                <!-- Button for customers to register a vehicle first -->
+                <a th:if="${session.loggedInUser?.role?.toString() == 'CUSTOMER'}" href="/vehicles/register" class="btn btn-outline-primary me-2">Register Vehicle</a>
+                <!-- Button to create a new ticket -->
+                <a th:if="${session.loggedInUser?.role?.toString() == 'CUSTOMER'}" href="/tickets/new" class="btn btn-primary">Create New Ticket</a>
+            </div>
         </div>
 
         <!-- Search and Filter Form -->
