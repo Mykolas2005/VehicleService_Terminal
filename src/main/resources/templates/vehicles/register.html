@@ -10,35 +10,43 @@
         input { width: 300px; padding: 8px; box-sizing: border-box; }
         .btn { padding: 8px 16px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
         .btn-link { text-decoration: none; color: #007bff; margin-left: 10px; }
+        .error-message { color: #dc3545; font-size: 0.9em; display: block; margin-top: 5px; }
     </style>
 </head>
 <body>
     <h2>Register New Vehicle</h2>
 
     <form th:action="@{/vehicles/register}" th:object="${vehicle}" method="post">
+        
         <div class="form-group">
             <label for="registrationNumber">Registration Number:</label>
-            <input type="text" id="registrationNumber" th:field="*{registrationNumber}" required />
+            <input type="text" id="registrationNumber" th:field="*{registrationNumber}" />
+            <!-- Error message span -->
+            <span class="error-message" th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}"></span>
         </div>
 
         <div class="form-group">
             <label for="make">Make:</label>
-            <input type="text" id="make" th:field="*{make}" required />
+            <input type="text" id="make" th:field="*{make}" />
+            <span class="error-message" th:if="${#fields.hasErrors('make')}" th:errors="*{make}"></span>
         </div>
 
         <div class="form-group">
             <label for="model">Model:</label>
-            <input type="text" id="model" th:field="*{model}" required />
+            <input type="text" id="model" th:field="*{model}" />
+            <span class="error-message" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></span>
         </div>
 
         <div class="form-group">
             <label for="yearOfManufacture">Year of Manufacture:</label>
-            <input type="number" id="yearOfManufacture" th:field="*{yearOfManufacture}" required />
+            <input type="number" id="yearOfManufacture" th:field="*{yearOfManufacture}" />
+            <span class="error-message" th:if="${#fields.hasErrors('yearOfManufacture')}" th:errors="*{yearOfManufacture}"></span>
         </div>
 
         <div class="form-group">
             <label for="mileage">Mileage:</label>
-            <input type="number" id="mileage" th:field="*{mileage}" required />
+            <input type="number" id="mileage" th:field="*{mileage}" />
+            <span class="error-message" th:if="${#fields.hasErrors('mileage')}" th:errors="*{mileage}"></span>
         </div>
 
         <button type="submit" class="btn">Save Vehicle</button>

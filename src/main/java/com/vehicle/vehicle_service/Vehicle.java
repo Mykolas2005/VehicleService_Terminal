@@ -1,6 +1,9 @@
 package com.vehicle.vehicle_service;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "vehicles")
@@ -10,18 +13,25 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Registration number is required")
     @Column(nullable = false, unique = true)
     private String registrationNumber;
 
+    @NotBlank(message = "Make is required")
     @Column(nullable = false)
     private String make;
 
+    @NotBlank(message = "Model is required")
     @Column(nullable = false)
     private String model;
 
+    @NotNull(message = "Year of manufacture is required")
+    @Min(value = 1886, message = "Year must be 1886 or later")
     @Column(nullable = false)
     private Integer yearOfManufacture;
 
+    @NotNull(message = "Mileage is required")
+    @Min(value = 0, message = "Mileage cannot be negative")
     @Column(nullable = false)
     private Integer mileage;
 

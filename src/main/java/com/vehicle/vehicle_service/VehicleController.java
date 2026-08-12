@@ -1,8 +1,10 @@
 package com.vehicle.vehicle_service;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,10 +56,15 @@ public class VehicleController {
     }
 
     @PostMapping("/register")
-    public String registerVehicle(@ModelAttribute Vehicle vehicle, HttpSession session) {
+    public String registerVehicle(@Valid @ModelAttribute("vehicle") Vehicle vehicle, BindingResult bindingResult, HttpSession session) {
         User currentUser = (User) session.getAttribute("loggedInUser");
         if (currentUser == null) {
             return "redirect:/";
+        }
+
+        // If validation fails, return the user back to the form with the errors
+        if (bindingResult.hasErrors()) {
+            return "vehicles/register";
         }
 
         User managedUser = userRepository.findById(currentUser.getId())
